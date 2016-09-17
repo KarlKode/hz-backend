@@ -54,8 +54,10 @@ def twilio():
 def reports_add(report_obj):
     if not validate_report(report_obj):
         return None
-    report = Report(report_obj.name, 'ios', report_obj.status, report_obj.location.lng, report_obj.location.lng,
-                    ','.join(report_obj.needs), report_obj.needs_status, ','.join(report_obj.skills))
+    location = report_obj.get('location', {'lat': None, 'lng': None})
+    report = Report(report_obj.get('name'), 'ios', report_obj.get('status'), location.get('lat'), location.get('lng'),
+                    ','.join(report_obj.get('needs', [])), report_obj.get('needs_status'),
+                    ','.join(report_obj.get('skills', [])))
     db.session.add(report)
     for photo_obj in report_obj.photos:
         photo = Photo(photo_obj)
