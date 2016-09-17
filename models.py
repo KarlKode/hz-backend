@@ -45,9 +45,19 @@ class Report(db.Model):
         self.status = status
         self.lng = lng
         self.lat = lat
-        self.needs = ','.join(needs)
+        if needs is not None:
+            self.needs = ','.join(needs)
+        else:
+            self.needs = None
         self.needs_status = needs_status
-        self.skills = ','.join(skills)
+        if needs is not None:
+            self.skills = ','.join(skills)
+        else:
+            self.skills = ''
+        print(needs)
+        print(self.needs)
+        print(skills)
+        print(self.skills)
 
     def __repr__(self):
         return '<Report %r>' % self.id
@@ -80,16 +90,3 @@ class Photo(db.Model):
 
     def __repr__(self):
         return '<Photo %r>' % self.id
-
-"""name: "Max Muster",
-  source: "ios|phone",
-  number: "+41791231234", // can also be null
-  status: "ok|injured|heavily_injured",
-  location: {
-    lat: 12.000,
-    lng: 13.000
-  },
-  needs: ["medic", "food", "water"],
-  needs_status: "open|processing|done",
-  skills: ["medic", "food", "water"],
-  photos: ["base64 of first photo", "base64 of second photo"]"""

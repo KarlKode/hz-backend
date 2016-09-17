@@ -34,14 +34,14 @@ Notification that help is request
 {
   id: 123, // Can also be null
   name: "Max Muster",
-  source: "ios|phone",
+  source: "ios|phone|sms",
   number: "+41791231234", // can also be null
   status: "ok|injured|heavily_injured",
   location: {
     lat: 12.000,
     lng: 13.000
   },
-  needs: ["medic", "food", "water"],
+  needs: ["medic", "shelter", "food", "water"],
   needs_status: "open|processing|done",
   skills: ["medic", "food", "water"],
   photos: ["base64 of first photo", "base64 of second photo"]

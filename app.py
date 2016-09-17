@@ -37,10 +37,96 @@ def reset():
 
 
 @app.route('/twilio-sms', methods=['POST'])
-def twilio():
+def twilio_sms():
     number = request.form.get('From')
     message = request.form.get('Body')
-    print('Got SMS from %r with text %r' % (number, message))
+    report = Report.query.filter_by(source='sms', number=number).first()
+    if not report:
+        report = Report(None, 'sms', None, None, None, None, None, None, number)
+        db.session.add(report)
+        response = "Enter your full name."
+    elif message.lower() == "delete":
+        db.session.delete(report)
+        response = "Deleted your report."
+    elif not report.name:
+        report.name = message
+        response = "What's your status? Respond with \"ok\", \"injured\" or \"heavily injured\"."
+    elif not report.status:
+        response = "What's your address? Respond with a sane address."
+        message = message.lower()
+        if message == "ok":
+            report.status = 'ok'
+        elif message == "injured":
+            report.status = 'injured'
+        elif message == "heavily injured":
+            report.status = 'heavily_injured'
+        else:
+            response = "Invalid response. What's your status? Respond with \"ok\", \"injured\" or \"heavily injured\"."
+    elif report.lng is None:
+        # TODO: Use google to get coordinates from address
+        location = {'lng': 19, 'lat': 1}
+        if location:
+            report.lng = location['lng']
+            report.lat = location['lat']
+            response = "Do you need help? Respond with \"none\", \"medical assistance\", \"shelter\", \"food\" or " \
+                       "\"water\"."
+        else:
+            response = "Invalid response. What's your address? Respond with a sane address."
+    elif report.needs is None:
+        if report.status == 'ok':
+            response = "Can you provide any help? Respond with \"none\", \"medical assistance\", \"food\" or \"water\"."
+        else:
+            response = "Thank you for your information."
+            report.skills = ''
+
+        message = message.lower()
+        if message == "none":
+            report.needs = ''
+            report.needs_status = 'done'
+        else:
+            report.needs_status = 'open'
+            if message == "medical assistance":
+                report.needs = 'medical_assistance'
+            elif message == "shelter":
+                report.needs = 'shelter'
+            elif message == "food":
+                report.needs = 'food'
+            elif message == "water":
+                report.needs = 'water'
+            else:
+                report.skills = None
+                response = "Invalid response. Do you need help? Respond with \"none\", \"medical assistance\", " \
+                           "\"shelter\", \"food\" or \"water\"."
+    elif report.skills is None:
+        response = "Thank you for your information."
+        message = message.lower()
+        if message == "none":
+            report.skills = ''
+        elif message == "medical assistance":
+            report.skills = 'medical_assistance'
+        elif message == "food":
+            report.skills = 'food'
+        elif message == "water":
+            report.skills = 'water'
+        else:
+            response = "Invalid response. Can you provide any help? Respond with \"none\", \"medical assistance\", " \
+                       "\"food\" or \"water\"."
+    else:
+        # TODO: Check if somebody nearby needs assistance
+        response = "Unknown state!"
+    db.session.commit()
+    return '''<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Message>%s</Message>
+</Response>''' % response
+
+
+@app.route('/twilio-phone', methods=['POST'])
+def twilio_phone():
+    print(request.form)
+    number = request.form.get('From')
+    message = request.form.get('Body')
+    print('Got call from %r with text %r' % (number, message))
 
     response = 'Yeah this stuff really works: ' + message
 
@@ -96,6 +182,7 @@ def reports_done(report_obj):
     db.session.add(action)
     db.session.commit()
     return report.to_dict()
+
 
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=5001)
