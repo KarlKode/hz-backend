@@ -39,8 +39,8 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="{{ url_for('overview') }}">Home</a></li>
-                <li><a href="{{ url_for('logs') }}">Log</a></li>
+                <li class="{% block nav_overview %}{% endblock %}"><a href="{{ url_for('overview') }}">Home</a></li>
+                <li class="{% block nav_logs %}{% endblock %}"><a href="{{ url_for('logs') }}">Log</a></li>
             </ul>
         </div>
     </div>

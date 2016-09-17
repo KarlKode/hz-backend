@@ -1,1 +1,5 @@
 html, body { height: 100%; }
+
+#map {
+    margin-top: -20px;
+}
