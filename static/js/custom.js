@@ -58,9 +58,3 @@ function initMap() {
   });
 }
 
-$("#addRow").click(function(){
-console.log("add pressed");
-var row = $("<tr><td>123</td><td>MaxMuster</td><td>ios</td><td>+41791231234</td><td>status</td><td>12.000</td><td>13.000</td><td>medic</td><td>open</td><td>skills</td><td><ahref=#></a></td></tr>");
-$("#logtable > tbody").append(row);
-});
-

@@ -4,24 +4,17 @@
 
 {%- block content %}
 
-<div class="col-md-12">
-	<div class="content-top-1" width="100%">
+<div class="col-md-8">
 
          <div class="container">
-            <h2>Hover Rows</h2>
-            <button id="addRow" type="button" class="btn btn-default">add Item</button>
-
-  <p>The .table-hover class enables a hover state on table rows:</p>
-  <table id="logtable" class="table table-hover">
+            <h2>Live Feed</h2>
+  <table id="logtable" class="table table-hover" style="width=auto !important;">
     <thead>
       <tr>
         <th>id</th>
         <th>name</th>
-        <th>source</th>
         <th>number</th>
         <th>status</th>
-        <th>latitude</th>
-        <th>longitude</th>
         <th>needs</th>
         <th>needs_status</th>
         <th>skills</th>
@@ -32,23 +25,16 @@
       <tr>
         <td>123</td>
         <td>Max Muster</td>
-        <td>ios</td>
         <td>+41791231234</td>
-        <td>status</td>
-        <td>12.000</td>
-        <td>13.000</td>
+        <td>injured</td>
         <td>medic</td>
         <td>open</td>
-        <td>skills</td>
+        <td></td>
         <td><a href="#"> </a></td>
       </tr>
     </tbody>
   </table>
 </div>
-
-
-
-         </div>
 </div>
 
 <div id="socketio-log"></div>
@@ -67,9 +53,30 @@ socket.on('reports add', function(data) {
 
 socket.on('reports new',function(data) {
    console.log("new data");
-   $("#addRow").click();
+   addRow(data);
 });
 
+
+function addRow(data) {
+
+   var name = faker.name.findName();
+   var phoneNr = faker.phone.phoneNumber();
+   console.log(name);
+   console.log(phoneNr);
+
+   var row = "<tr><td>123</td><td>" + name  + "</td><td>"+ phoneNr+"+</td><td>injured</td><td>medic</td><td>open</td><td>skills</td><td><ahref=#></a></td></tr>";
+$("#logtable").prepend(row);
+   return 0;
+}
+
+window.setInterval(function(){
+   simulate();
+}, 5000);
+
+function simulate(){
+   addRow();
+   console.log("bla");
+}
 
 </script>
 
