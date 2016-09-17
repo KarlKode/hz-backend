@@ -22,6 +22,12 @@ def overview():
     return render_template('overview.html', reports=reports)
 
 
+@app.route('/map')
+def detail_map():
+    reports = Report.query.order_by(Report.id.desc()).all()
+    return render_template('detail_map.html', reports=reports)
+
+
 @app.route('/logs')
 def logs():
     reports = Report.query.order_by(Report.id.desc()).all()

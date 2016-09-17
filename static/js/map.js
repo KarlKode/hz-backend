@@ -1,48 +1,25 @@
-var map, heatmap, points;
+var map, points = [];
 
-function changeGradient() {
-    var gradient = [
-        'rgba(0, 255, 255, 0)',
-        'rgba(0, 255, 255, 1)',
-        'rgba(0, 191, 255, 1)',
-        'rgba(0, 127, 255, 1)',
-        'rgba(0, 63, 255, 1)',
-        'rgba(0, 0, 255, 1)',
-        'rgba(0, 0, 223, 1)',
-        'rgba(0, 0, 191, 1)',
-        'rgba(0, 0, 159, 1)',
-        'rgba(0, 0, 127, 1)',
-        'rgba(63, 0, 91, 1)',
-        'rgba(127, 0, 63, 1)',
-        'rgba(191, 0, 31, 1)',
-        'rgba(255, 0, 0, 1)'
-    ];
-
-    heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
-}
-
-function changeRadius() {
-    heatmap.set('radius', heatmap.get('radius') ? null : 20);
-}
-
-function changeOpacity() {
-    heatmap.set('opacity', heatmap.get('opacity') ? null : 0.2);
-}
-
-var heatmap = null;
-
-function redrawPoints(selector) {
+function redrawMapPoints(map, selector) {
     socket.emit('reports list', {}, function (data) {
-        points.clear();
+        for (var i = 0; i < points.length; i++) {
+            points[i].setMap(null);
+        }
+        points = [];
 
-        for (var i = 0; i < data.length; i++) {
+        for (i = 0; i < data.length; i++) {
             var report = data[i];
             if (selector != null) {
                 if (report.status != selector) {
                     continue;
                 }
             }
-            points.push({location: new google.maps.LatLng(report.location.lat, report.location.lng), weight: 0.65});
+            var marker = new google.maps.Marker({
+                map: map,
+                position: new google.maps.LatLng(report.location.lat, report.location.lng)
+            });
+            console.log(marker);
+            points.push(marker);
         }
 
         console.log('done redrawing');
@@ -82,14 +59,7 @@ function initMap() {
         ]
     });
 
-    points = new google.maps.MVCArray([]);
-
-    heatmap = new google.maps.visualization.HeatmapLayer({
-        data: points,
-        map: map,
-        radius: 32
-    });
-    redrawPoints();
+    redrawMapPoints(map);
 }
 
 var socket = io.connect('http://' + document.domain + ':' + location.port);
