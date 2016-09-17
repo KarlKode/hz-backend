@@ -1,22 +1,31 @@
 # HackZurich Catastrophe
 
 ## SocketIO Events
-### ```reports add```
+### Client -> Server
+#### ```reports add```
 Add a new report
 
-### ```reports list```
+#### ```reports list```
 Get a list with all reports
 
-### ```reports accept```
+#### ```reports accept```
 Accept a report
 
-### ```reports done```
+#### ```reports done```
 Mark a previously accepted report as fulfilled
 
-### ```reports status change```
+#### ```reports reset```
+Reset the whole database to a state with only dummy data
+
+### Server -> Client
+
+#### ```reports new```
+Notification that a new report has been added to the database
+
+#### ```reports status change```
 Notification that the status of a report has changed
 
-### ```reports change help```
+#### ```reports change help```
 Notification that help is request
 
 ## Schema

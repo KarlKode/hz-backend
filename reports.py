@@ -1,6 +1,3 @@
-from flask import jsonify
-
-
 def validate_report(report):
     # TODO
     return True
@@ -9,3 +6,4 @@ def validate_report(report):
 def json_report(report):
     # TODO
     return {'todo': True}
+

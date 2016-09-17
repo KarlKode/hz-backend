@@ -9,7 +9,6 @@ class Action(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     creation_time = db.Column(db.DateTime)
     type = db.Column(db.String(10))
-    report = db.relationship('Report', backref='action', lazy='dynamic')
 
     def __init__(self, type, report):
         self.creation_time = datetime.now()
@@ -22,6 +21,7 @@ class Action(db.Model):
 
 class Report(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    creation_time = db.Column(db.DateTime)
     name = db.Column(db.String(100))
     source = db.Column(db.String(10))
     number = db.Column(db.String(20))
@@ -32,8 +32,10 @@ class Report(db.Model):
     needs_status = db.Column(db.String(15))
     skills = db.Column(db.String(100))
     photos = db.relationship('Photo', backref='report', lazy='dynamic')
+    actions = db.relationship('Report', backref='report', lazy='dynamic')
 
     def __init__(self, name, source, status, lng, lat, needs, needs_status, skills, number=None):
+        self.creation_time = datetime.now()
         self.name = name
         self.source = source
         self.number = number
