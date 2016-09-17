@@ -48,13 +48,20 @@ for(i=0;i<40;i++){
 	rand2 = Math.random() / 10;
 	newlat = lat + rand;
 	newlon = lon + rand2;
-	console.log(newlat);
-	console.log(newlon);
-	console.log(rand);
 	points.push(new google.maps.LatLng( newlon, newlat));
 }
 return points;
 }
+
+function getPoints3(){
+var gpoints = [];
+for(i = 0 ; i < reports.length ; i++){
+	console.log("filling points" + reports[i].location.lat);
+	gpoints.push(new google.maps.LatLng(reports[i].location.lat, reports[i].location.lng));
+} 
+return gpoints;
+}
+
 
 // Heatmap data: 500 Points
 function getPoints() {
@@ -591,10 +598,11 @@ function initMap() {
     });
     
     heatmap = new google.maps.visualization.HeatmapLayer({
-    data: getPoints2(),
+    data: getPoints3(),
     map: map
   });
 }
+
 
 var socket = io.connect('http://' + document.domain + ':' + location.port);
 socket.on('connect', function() {
