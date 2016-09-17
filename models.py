@@ -9,14 +9,16 @@ class Action(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     creation_time = db.Column(db.DateTime)
     type = db.Column(db.String(10))
+    data = db.Column(db.String(100))
 
-    def __init__(self, type, report):
+    def __init__(self, type, report=None, data=None):
         self.creation_time = datetime.now()
         self.type = type
         self.report = report
+        self.data = data
 
     def __repr__(self):
-        return '<Action %r, %r>' % (self.type, self.report.id)
+        return '<Action %r, %r>' % (self.type, self.report)
 
 
 class Report(db.Model):
@@ -48,6 +50,22 @@ class Report(db.Model):
 
     def __repr__(self):
         return '<Report %r>' % self.id
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'creation_time': repr(self.creation_time),
+            'name': self.name,
+            'source': self.source,
+            'number': self.number,
+            'status': self.status,
+            'location': {'lat': self.lat, 'lng': self.lng},
+            'needs': ','.split(self.needs),
+            'needs_status': self.needs_status,
+            'skills': ','.split(self.skills),
+            'photos': [photo.data for photo in self.photos.all()],
+            'actions': [action.type for action in self.actions.all()],
+        }
 
 
 class Photo(db.Model):
