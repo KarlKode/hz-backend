@@ -37,11 +37,21 @@ function getPoints2(){
 var points = []
 var lon = 47.390120;
 var lat = 8.514997;
-var rand = Math.random();
+var rand = Math.random() /100;
+var rand2 = Math.random() /100;
 
-for(i=0;i<400;i++){
-	rand = Math.random();
-	points.push(new google.maps.LatLng( lon + rand, lat +rand ));
+var newlat;
+var newlon;
+
+for(i=0;i<40;i++){
+	rand = Math.random() /10;
+	rand2 = Math.random() / 10;
+	newlat = lat + rand;
+	newlon = lon + rand2;
+	console.log(newlat);
+	console.log(newlon);
+	console.log(rand);
+	points.push(new google.maps.LatLng( newlon, newlat));
 }
 return points;
 }
