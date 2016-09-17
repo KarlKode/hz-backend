@@ -1,6 +1,23 @@
+from datetime import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
+
+
+class Action(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    creation_time = db.Column(db.DateTime)
+    type = db.Column(db.String(10))
+    report = db.relationship('Report', backref='action', lazy='dynamic')
+
+    def __init__(self, type, report):
+        self.creation_time = datetime.now()
+        self.type = type
+        self.report = report
+
+    def __repr__(self):
+        return '<Action %r, %r>' % (self.type, self.report.id)
 
 
 class Report(db.Model):
@@ -28,7 +45,7 @@ class Report(db.Model):
         self.skills = ','.join(skills)
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<Report %r>' % self.id
 
 
 class Photo(db.Model):
@@ -39,7 +56,7 @@ class Photo(db.Model):
         self.data = data
 
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<Photo %r>' % self.id
 
 """name: "Max Muster",
   source: "ios|phone",

@@ -2,7 +2,7 @@ from flask import Flask, render_template, jsonify, abort
 from flask_socketio import SocketIO, emit
 
 import settings
-from models import db
+from models import db, Action
 from reports import validate_report, json_report
 
 app = Flask(__name__)
@@ -19,6 +19,14 @@ def overview():
 @app.route('/socketio-test')
 def socketio_test():
     return render_template('socketio-test.html')
+
+
+@app.route('/reset')
+def reset():
+    db.drop_all()
+    db.create_all()
+    # TODO: Insert dummy data
+    return 'done'
 
 
 @socketio.on('reports add')
