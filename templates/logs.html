@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ super() }} - Overview{% endblock %}
+
+{%- block content %}
+
+<div class="col-md-12">
+	<div class="content-top-1" width="100%">
+
+         <div class="container">
+            <h2>Hover Rows</h2>
+            <button id="addRow" type="button" class="btn btn-default">add Item</button>
+
+  <p>The .table-hover class enables a hover state on table rows:</p>
+  <table id="logtable" class="table table-hover">
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>name</th>
+        <th>source</th>
+        <th>number</th>
+        <th>status</th>
+        <th>latitude</th>
+        <th>longitude</th>
+        <th>needs</th>
+        <th>needs_status</th>
+        <th>skills</th>
+        <th>photos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>123</td>
+        <td>Max Muster</td>
+        <td>ios</td>
+        <td>+41791231234</td>
+        <td>status</td>
+        <td>12.000</td>
+        <td>13.000</td>
+        <td>medic</td>
+        <td>open</td>
+        <td>skills</td>
+        <td><a href="#"> </a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+         </div>
+</div>
+
+<div id="socketio-log"></div>
+
+<script>
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+socket.on('connect', function() {
+    socket.emit('my event', {data: 'I\'m connected!'});
+    console.log("Established socket.io connection");
+});
+
+socket.on('reports add', function(data) {
+   console.log/("Test !");
+   console.log('socket->log', data);
+});
+
+socket.on('reports new',function(data) {
+   console.log("new data");
+   $("#addRow").click();
+});
+
+
+</script>
+
+{%- endblock %}
