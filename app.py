@@ -52,7 +52,7 @@ def twilio():
 
 @socketio.on('reports add')
 def reports_add(report_obj):
-    if validate_report(report_obj):
+    if not validate_report(report_obj):
         return None
     report = Report(report_obj.name, 'ios', report_obj.status, report_obj.location.lng, report_obj.location.lng,
                     ','.join(report_obj.needs), report_obj.needs_status, ','.join(report_obj.skills))
