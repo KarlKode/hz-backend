@@ -14,7 +14,7 @@ db.init_app(app)
 
 @app.route('/')
 def overview():
-    return render_template('overview.html')
+    return render_template('logs.html')
 
 
 @app.route('/socketio-test')

@@ -26,6 +26,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!-- Custom and plugin javascript -->
 <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
 <script src="{{ url_for('static', filename='js/screenfull.js') }}"></script>
+<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 <script>
 $(function () {
     $('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
