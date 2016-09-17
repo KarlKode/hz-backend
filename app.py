@@ -17,7 +17,17 @@ db.init_app(app)
 
 @app.route('/')
 def overview():
+    return render_template('overview.html')
+
+
+@app.route('/logs')
+def maps():
     return render_template('logs.html')
+
+
+@app.route('/actions')
+def actions():
+    return render_template('actions.html')
 
 
 @app.route('/socketio-test')
