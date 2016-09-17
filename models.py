@@ -71,9 +71,9 @@ class Report(db.Model):
             'number': self.number,
             'status': self.status,
             'location': {'lat': self.lat, 'lng': self.lng},
-            'needs': ','.split(self.needs),
+            'needs': self.needs.split(',') if self.needs is not None else [],
             'needs_status': self.needs_status,
-            'skills': ','.split(self.skills),
+            'skills': self.skills.split(',') if self.skills is not None else [],
             'photos': [photo.data.decode('utf8') for photo in self.photos.all()],
             'actions': [action.type for action in self.actions.all()],
         }

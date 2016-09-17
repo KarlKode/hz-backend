@@ -1,9 +1,13 @@
-def validate_report(report):
+import twilio
+from flask.ext.socketio import emit
+
+from models import Report
+
+
+def validate_report(report_obj):
     # TODO
     return True
 
 
-def json_report(report):
-    # TODO
-    return {'todo': True}
-
+def notify_report(report):
+    emit('reports new', report.to_dict())

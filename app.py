@@ -1,10 +1,13 @@
+import random
+
 from flask import Flask, render_template
 from flask import request
 from flask_socketio import SocketIO, emit
+from twilio import twiml
 
 import settings
 from models import db, Report, Photo, Action
-from reports import validate_report
+from reports import validate_report, notify_report
 
 app = Flask(__name__)
 app.config.from_object(settings)
@@ -32,7 +35,42 @@ def socketio_test_event(data):
 def reset():
     db.drop_all()
     db.create_all()
-    # TODO: Insert dummy data
+    lat_min = app.config.get('LOCATION_BOUNDS_LAT_MIN', 47.386)
+    lat_max = app.config.get('LOCATION_BOUNDS_LAT_MAX', 47.393)
+    lon_min = app.config.get('LOCATION_BOUNDS_LON_MIN', 8.505)
+    lon_max = app.config.get('LOCATION_BOUNDS_LON_MAX', 8.525)
+    for i in range(0, app.config.get('FAKE_DATA_POINTS', 10)):
+        name = random.choice(('Marc', 'Dylan', 'Leo', 'Enes', 'Anna', 'Lea', 'Kurt', 'Chad', 'Lisa', 'Petra')) + ' '
+        name += random.choice(('Gähwiler', 'Marriott', 'Helminger', 'Foobar', 'van Räudig', 'Kurz', 'Lang', 'On', 'Da'))
+        source = random.choice(('ios', 'sms'))
+        if source == 'sms':
+            number = '+41798287644'
+        else:
+            number = None
+        status = random.choice(('ok', 'injured', 'heavily_injured'))
+        lat = random.uniform(lat_min, lat_max)
+        lon = random.uniform(lon_min, lon_max)
+        if status == 'ok':
+            needs = random.choice(([], [], [], [], [], ['medic'], ['medic', 'shelter'],
+                                   ['medic', 'shelter', 'water'], ['water'], ['water', 'food']))
+        elif status == 'heavily_injured':
+                needs = ['medic'] + random.choice(([], [], [], [], ['shelter'], ['shelter', 'water'], ['water'],
+                                                   ['water', 'food']))
+        else:
+            needs = random.choice(([], [], [], [], [], ['medic'], ['medic'], ['medic', 'shelter'],
+                                   ['medic', 'shelter', 'water'], ['water'], ['water', 'food']))
+        if needs:
+            needs_status = random.choice(('open', 'open', 'open', 'open', 'open', 'processing', 'processing', 'done'))
+        else:
+            needs_status = 'done'
+        if status == 'ok':
+            skills = random.choice(([], [], [], [], [], ['medic'], ['medic'], ['medic'], ['medic', 'water'], ['water'],
+                                    ['water', 'food'], ['food']))
+        else:
+            skills = []
+        report = Report(name, source, status, lon, lat, needs, needs_status, skills, number)
+        db.session.add(report)
+    db.session.commit()
     return 'done'
 
 
@@ -40,19 +78,21 @@ def reset():
 def twilio_sms():
     number = request.form.get('From')
     message = request.form.get('Body')
+    notify = False
+
     report = Report.query.filter_by(source='sms', number=number).first()
     if not report:
         report = Report(None, 'sms', None, None, None, None, None, None, number)
         db.session.add(report)
-        response = "Enter your full name."
+        response_msg = "Enter your full name."
     elif message.lower() == "delete":
         db.session.delete(report)
-        response = "Deleted your report."
+        response_msg = "Deleted your report."
     elif not report.name:
         report.name = message
-        response = "What's your status? Respond with \"ok\", \"injured\" or \"heavily injured\"."
+        response_msg = "What's your status? Respond with \"ok\", \"injured\" or \"heavily injured\"."
     elif not report.status:
-        response = "What's your address? Respond with a sane address."
+        response_msg = "What's your address? Respond with a sane address."
         message = message.lower()
         if message == "ok":
             report.status = 'ok'
@@ -61,24 +101,26 @@ def twilio_sms():
         elif message == "heavily injured":
             report.status = 'heavily_injured'
         else:
-            response = "Invalid response. What's your status? Respond with \"ok\", \"injured\" or \"heavily injured\"."
+            response_msg = "Invalid response. What's your status? Respond with \"ok\", \"injured\" or " \
+                           "\"heavily injured\"."
     elif report.lng is None:
         # TODO: Use google to get coordinates from address
         location = {'lng': 19, 'lat': 1}
         if location:
             report.lng = location['lng']
             report.lat = location['lat']
-            response = "Do you need help? Respond with \"none\", \"medical assistance\", \"shelter\", \"food\" or " \
-                       "\"water\"."
+            response_msg = "Do you need help? Respond with \"none\", \"medical assistance\", \"shelter\", \"food\" or" \
+                           " \"water\"."
         else:
-            response = "Invalid response. What's your address? Respond with a sane address."
+            response_msg = "Invalid response. What's your address? Respond with a sane address."
     elif report.needs is None:
         if report.status == 'ok':
-            response = "Can you provide any help? Respond with \"none\", \"medical assistance\", \"food\" or \"water\"."
+            response_msg = "Can you provide any help? Respond with \"none\", \"medical assistance\", \"food\" or " \
+                           "\"water\"."
         else:
-            response = "Thank you for your information."
+            response_msg = "Thank you for your information."
             report.skills = ''
-
+            notify = True
         message = message.lower()
         if message == "none":
             report.needs = ''
@@ -86,7 +128,7 @@ def twilio_sms():
         else:
             report.needs_status = 'open'
             if message == "medical assistance":
-                report.needs = 'medical_assistance'
+                report.needs = 'medic'
             elif message == "shelter":
                 report.needs = 'shelter'
             elif message == "food":
@@ -95,45 +137,36 @@ def twilio_sms():
                 report.needs = 'water'
             else:
                 report.skills = None
-                response = "Invalid response. Do you need help? Respond with \"none\", \"medical assistance\", " \
-                           "\"shelter\", \"food\" or \"water\"."
+                response_msg = "Invalid response. Do you need help? Respond with \"none\", \"medical assistance\", " \
+                               "\"shelter\", \"food\" or \"water\"."
+                notify = False
     elif report.skills is None:
-        response = "Thank you for your information."
+        response_msg = "Thank you for your information."
         message = message.lower()
+        notify = bool(report.needs)
         if message == "none":
             report.skills = ''
         elif message == "medical assistance":
-            report.skills = 'medical_assistance'
+            report.skills = 'medic'
         elif message == "food":
             report.skills = 'food'
         elif message == "water":
             report.skills = 'water'
         else:
-            response = "Invalid response. Can you provide any help? Respond with \"none\", \"medical assistance\", " \
-                       "\"food\" or \"water\"."
+            response_msg = "Invalid response. Can you provide any help? Respond with \"none\", \"medical assistance\"" \
+                           ", \"food\" or \"water\"."
+            notify = False
     else:
         # TODO: Check if somebody nearby needs assistance
-        response = "Unknown state!"
+        response_msg = "Unknown state!"
+
+    if notify:
+        notify_report(report)
+
     db.session.commit()
-    return '''<?xml version="1.0" encoding="UTF-8"?>
-<Response>
-    <Message>%s</Message>
-</Response>''' % response
-
-
-@app.route('/twilio-phone', methods=['POST'])
-def twilio_phone():
-    print(request.form)
-    number = request.form.get('From')
-    message = request.form.get('Body')
-    print('Got call from %r with text %r' % (number, message))
-
-    response = 'Yeah this stuff really works: ' + message
-
-    return '''<?xml version="1.0" encoding="UTF-8"?>
-<Response>
-    <Message>%s</Message>
-</Response>''' % response
+    response = twiml.Response()
+    message = response.message(response_msg)
+    return str(message)
 
 
 @socketio.on('reports add')
@@ -150,8 +183,7 @@ def reports_add(report_obj):
     action = Action('reports_add', report=report)
     db.session.add(action)
     db.session.commit()
-    emit('reports new', report.to_dict())
-    # TODO: Notify all clients that could help that a new report has been added
+    notify_report(report)
 
 
 @socketio.on('reports list')
