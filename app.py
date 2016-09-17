@@ -56,20 +56,16 @@ def reports_add(report_obj):
         return None
     location = report_obj.get('location', {'lat': None, 'lng': None})
     report = Report(report_obj.get('name'), 'ios', report_obj.get('status'), location.get('lat'), location.get('lng'),
-                    ','.join(report_obj.get('needs', [])), report_obj.get('needs_status'),
-                    ','.join(report_obj.get('skills', [])))
+                    report_obj.get('needs', []), report_obj.get('needs_status'), report_obj.get('skills', []))
     db.session.add(report)
-    for photo_obj in report_obj.photos:
-        photo = Photo(photo_obj)
-        db.session.add(photo_obj)
-        report.photos.add(photo)
+    for photo_obj in report_obj.get('photos', []):
+        photo = Photo(report, photo_obj.encode('utf8'))
+        db.session.add(photo)
     action = Action('reports_add', report=report)
     db.session.add(action)
     db.session.commit()
-    emit('reports new', report)
-
+    emit('reports new', report.to_dict())
     # TODO: Notify all clients that could help that a new report has been added
-    return report.to_dict()
 
 
 @socketio.on('reports list')

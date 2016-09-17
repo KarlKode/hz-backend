@@ -8,6 +8,7 @@ db = SQLAlchemy()
 class Action(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     creation_time = db.Column(db.DateTime)
+    report_id = db.Column(db.Integer, db.ForeignKey('report.id'))
     type = db.Column(db.String(10))
     data = db.Column(db.String(100))
 
@@ -33,8 +34,8 @@ class Report(db.Model):
     needs = db.Column(db.String(100))
     needs_status = db.Column(db.String(15))
     skills = db.Column(db.String(100))
-    photos = db.relationship('Photo', backref='report', lazy='dynamic')
-    actions = db.relationship('Report', backref='report', lazy='dynamic')
+    photos = db.relationship('Photo', backref=db.backref('person', lazy='joined'), lazy='dynamic')
+    actions = db.relationship('Action', backref=db.backref('person', lazy='joined'), lazy='dynamic')
 
     def __init__(self, name, source, status, lng, lat, needs, needs_status, skills, number=None):
         self.creation_time = datetime.now()
@@ -63,16 +64,18 @@ class Report(db.Model):
             'needs': ','.split(self.needs),
             'needs_status': self.needs_status,
             'skills': ','.split(self.skills),
-            'photos': [photo.data for photo in self.photos.all()],
+            'photos': [photo.data.decode('utf8') for photo in self.photos.all()],
             'actions': [action.type for action in self.actions.all()],
         }
 
 
 class Photo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    report_id = db.Column(db.Integer, db.ForeignKey('report.id'))
     data = db.Column(db.BLOB)
 
-    def __init__(self, data):
+    def __init__(self, report, data):
+        self.report = report
         self.data = data
 
     def __repr__(self):
