@@ -1,22 +1,22 @@
 # HackZurich Catastrophe
 
 ## SocketIO Events
-### ```reports-add```
+### ```reports add```
 Add a new report
 
-### ```reports-list```
+### ```reports list```
 Get a list with all reports
 
-### ```reports-accept```
+### ```reports accept```
 Accept a report
 
-### ```reports-done```
+### ```reports done```
 Mark a previously accepted report as fulfilled
 
-### ```reports-status-change```
+### ```reports status change```
 Notification that the status of a report has changed
 
-### ```reports-request-help```
+### ```reports change help```
 Notification that help is request
 
 ## Schema
