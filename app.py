@@ -1,4 +1,5 @@
 import random
+from urllib.request import urlopen
 
 from flask import Flask, render_template
 from flask import request
@@ -179,6 +180,31 @@ def twilio_sms():
     response = twiml.Response()
     message = response.message(response_msg)
     return str(message)
+
+
+@app.route('/tropo/debug', methods=['GET', 'POST'])
+def tropo_debug():
+    print(request.form)
+    return 'done'
+
+
+@app.route('/tropo', methods=['GET', 'POST'])
+def tropo():
+    status = request.form.get('status', None)
+    needs = request.form.get('needs', None)
+    skills = request.form.get('skills', None)
+    lat_min = app.config.get('LOCATION_BOUNDS_LAT_MIN', 47.386)
+    lat_max = app.config.get('LOCATION_BOUNDS_LAT_MAX', 47.393)
+    lon_min = app.config.get('LOCATION_BOUNDS_LON_MIN', 8.505)
+    lon_max = app.config.get('LOCATION_BOUNDS_LON_MAX', 8.525)
+    lat = random.uniform(lat_min, lat_max)
+    lon = random.uniform(lon_min, lon_max)
+    if status is None or needs is None or skills is None:
+        return 'error'
+    report = Report("Anonymous", 'phone', status, lon, lat, [needs] if needs else [], 'open', [skills] if skills else [], '+41798287644')
+    db.session.add(report)
+    db.session.commit()
+    return 'done'
 
 
 @socketio.on('reports add')

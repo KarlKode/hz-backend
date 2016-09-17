@@ -54,10 +54,6 @@ class Report(db.Model):
             self.skills = ','.join(skills)
         else:
             self.skills = ''
-        print(needs)
-        print(self.needs)
-        print(skills)
-        print(self.skills)
 
     def __repr__(self):
         return '<Report %r>' % self.id
