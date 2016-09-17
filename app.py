@@ -196,11 +196,12 @@ def reports_add(report_obj):
     db.session.add(action)
     db.session.commit()
     notify_report(report)
+    return report.to_dict()
 
 
 @socketio.on('reports list')
-def reports_list():
-    reports = Report.query.order_by('creation_date').all()
+def reports_list(foo):
+    reports = Report.query.order_by(Report.creation_time.desc()).all()
     return [report.to_dict() for report in reports]
 
 

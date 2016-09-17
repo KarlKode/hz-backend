@@ -1,7 +1,6 @@
+var map = null;
+
 function initMap() {
-    var var_location = new google.maps.LatLng(45.430817, 12.331516);
-
-
     var mapDiv = document.getElementById('map');
     var map = new google.maps.Map(mapDiv, {
         center: {lat: 47.39, lng: 8.515},
@@ -29,3 +28,13 @@ function initMap() {
         ]
     });
 }
+
+var socket = io.connect('http://' + document.domain + ':' + location.port);
+socket.on('connect', function() {
+    //socket.emit('my event', {data: 'I\'m connected!'});
+    console.log("Established socket.io connection");
+});
+
+socket.on('reports new', function(data) {
+    console.log('Reports NEW', data);
+});
