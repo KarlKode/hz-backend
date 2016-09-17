@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ super() }} - Overview{% endblock %}
+
+{% block nav_map %}active{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZE1RJQeKSN5jxz8xxtXZpnEfs7kF08IA&signed_in=true&libraries=visualization&callback=initMap"></script>
+{% endblock %}
+
+{%- block content %}
+<div id="map" style="height: 100%"></div>
+{%- endblock %}
