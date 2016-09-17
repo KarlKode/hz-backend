@@ -1,18 +1,63 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, abort
 from flask_socketio import SocketIO, emit
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
+import settings
+from models import db, Action
+from reports import validate_report, json_report
 
-@app.route("/")
+app = Flask(__name__)
+app.config.from_object(settings)
+socketio = SocketIO(app)
+db.init_app(app)
+
+
+@app.route('/')
 def overview():
     return render_template('overview.html')
 
-@socketio.on('my event')
-def test_message(message):
-    emit('my response', {'data': 'got it!'})
+
+@app.route('/socketio-test')
+def socketio_test():
+    return render_template('socketio-test.html')
+
+
+@app.route('/reset')
+def reset():
+    db.drop_all()
+    db.create_all()
+    # TODO: Insert dummy data
+    return 'done'
+
+
+@socketio.on('reports add')
+def reports_add(report):
+    if validate_report(report):
+        return abort(400)
+    # TODO: Save report to database
+    return jsonify(report=json_report(report))
+
+
+@socketio.on('reports list')
+def reports_list():
+    # TODO: Load reports
+    reports = []
+    return jsonify(reports=[json_report(report) for report in reports])
+
+
+@socketio.on('reports accept')
+def reports_accept(report):
+    if validate_report(report):
+        return abort(400)
+    # TODO: Load report from database and set it to accepted
+    return jsonify(report=json_report(report))
+
+
+@socketio.on('reports done')
+def reports_accept(report):
+    if validate_report(report):
+        return abort(400)
+    # TODO: Load report from database and set it to done
+    return jsonify(report=json_report(report))
 
 if __name__ == '__main__':
     socketio.run(app)
-

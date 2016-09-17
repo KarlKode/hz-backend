@@ -1,18 +1,23 @@
 # HackZurich Catastrophe
 
 ## SocketIO Events
-### ```reports-add```
+### ```reports add```
 Add a new report
 
-### ```reports-list```
+### ```reports list```
 Get a list with all reports
 
-### ```reports-accept```
+### ```reports accept```
 Accept a report
 
-### ```reports-done```
+### ```reports done```
 Mark a previously accepted report as fulfilled
 
+### ```reports status change```
+Notification that the status of a report has changed
+
+### ```reports change help```
+Notification that help is request
 
 ## Schema
 ### reports
@@ -27,22 +32,9 @@ Mark a previously accepted report as fulfilled
     lat: 12.000,
     lng: 13.000
   },
-  needs: [
-    {
-      type: "medic",
-      status: "open|processing|done"
-    },
-    {
-      type: "food",
-      status: "open|processing|done"
-    },
-    {
-      type: "water",
-      status: "open|processing|done"
-    },
-  ],
+  needs: ["medic", "food", "water"],
+  needs_status: "open|processing|done",
   skills: ["medic", "food", "water"],
   photos: ["base64 of first photo", "base64 of second photo"]
 }
 ```
-

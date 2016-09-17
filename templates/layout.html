@@ -22,28 +22,28 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!-- Mainly scripts -->
 <script src="{{ url_for('static', filename='js/jquery.metisMenu.js') }}"></script>
 <script src="{{ url_for('static', filename='js/jquery.slimscroll.min.js') }}"></script>
+<script src="//cdn.socket.io/socket.io-1.4.5.js"></script>
 <!-- Custom and plugin javascript -->
 <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
-<script src="{{ url_for('static', filename='js/custom.js') }}"></script>
 <script src="{{ url_for('static', filename='js/screenfull.js') }}"></script>
-		<script>
-		$(function () {
-			$('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
+<script>
+$(function () {
+    $('#supported').text('Supported/allowed: ' + !!screenfull.enabled);
 
-			if (!screenfull.enabled) {
-				return false;
-			}
-
-
-
-			$('#toggle').click(function () {
-				screenfull.toggle($('#container')[0]);
-			});
+    if (!screenfull.enabled) {
+        return false;
+    }
 
 
 
-		});
-		</script>
+    $('#toggle').click(function () {
+        screenfull.toggle($('#container')[0]);
+    });
+
+
+
+});
+</script>
 
 <!----->
 
@@ -187,7 +187,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 		              </ul>
 		            </li>
 					<li class="dropdown">
-		              <a href="#" class="dropdown-toggle dropdown-at" data-toggle="dropdown"><span class=" name-caret">Rackham<i class="caret"></i></span><img src="images/wo.jpg"></a>
+		              <a href="#" class="dropdown-toggle dropdown-at" data-toggle="dropdown"><span class=" name-caret">Rackham<i class="caret"></i></span><img src="{{ url_for('static', filename='images/wo.jpg') }}"></a>
 		              <ul class="dropdown-menu " role="menu">
 		                <li><a href="profile.html"><i class="fa fa-user"></i>Edit Profile</a></li>
 		                <li><a href="inbox.html"><i class="fa fa-envelope"></i>Inbox</a></li>
@@ -519,10 +519,11 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
      </div>
 <!---->
 <!--scrolling js-->
-	<script src="{{ url_for('static', filename='js/jquery.nicescroll.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-	<!--//scrolling js-->
-	<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"> </script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZE1RJQeKSN5jxz8xxtXZpnEfs7kF08IA&callback=initMap"></script>
+<script src="{{ url_for('static', filename='js/jquery.nicescroll.js') }}"></script>
+<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+<!--//scrolling js-->
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"> </script>
+<script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZE1RJQeKSN5jxz8xxtXZpnEfs7kF08IA&callback=initMap"></script>
 </body>
 </html>
