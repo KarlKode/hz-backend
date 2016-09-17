@@ -2,41 +2,40 @@
 
 {% block title %}{{ super() }} - Overview{% endblock %}
 
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/logs.js') }}"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZE1RJQeKSN5jxz8xxtXZpnEfs7kF08IA&callback=initMap"></script>
+{% endblock %}
+
 {%- block content %}
 
-<div class="col-md-12">
-    <div class="content-top-1">
-        <h2>Live Feed</h2>
-        <table id="logtable" class="table table-hover">
-            <thead>
-            <tr>
-                <th>id</th>
-                <th>name</th>
-                <th>number</th>
-                <th>status</th>
-                <th>needs</th>
-                <th>needs_status</th>
-                <th>skills</th>
-                <th>photos</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>123</td>
-                <td>Max Muster</td>
-                <td>+41791231234</td>
-                <td>injured</td>
-                <td>medic</td>
-                <td>open</td>
-                <td></td>
-                <td><a href="#"> </a></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<div class="container">
+    <h2>Live Feed</h2>
+    <table id="logtable" class="table table-hover">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone #</th>
+            <th>Status</th>
+            <th>Requested help</th>
+            <th>Status</th>
+            <th>Skills</th>
+        </tr>
+        </thead>
+        <tbody>
+        {%  for report in reports %}
+        <tr>
+            <td>{{ report.name }}</td>
+            <td>{% if report.source == 'ios' %}iOS App ID {{ report }}{% else %}{{ report.number }}{% endif %}</td>
+            <td>{{ report.status }}</td>
+            <td>{{ ', '.join(report.needs.split(',')) }}</td>
+            <td>{{ report.needs_status }}</td>
+            <td>{{ ', '.join(report.skills.split(',')) }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </div>
-
-<div id="socketio-log"></div>
 
 <script>
 var socket = io.connect('http://' + document.domain + ':' + location.port);

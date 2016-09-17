@@ -17,12 +17,14 @@ db.init_app(app)
 
 @app.route('/')
 def overview():
-    return render_template('overview.html')
+    reports = Report.query.order_by(Report.id.desc()).all()
+    return render_template('overview.html', reports=reports)
 
 
 @app.route('/logs')
-def maps():
-    return render_template('logs.html')
+def logs():
+    reports = Report.query.order_by(Report.id.desc()).all()
+    return render_template('logs.html', reports=reports)
 
 
 @app.route('/actions')
@@ -51,7 +53,7 @@ def reset():
     lon_max = app.config.get('LOCATION_BOUNDS_LON_MAX', 8.525)
     for i in range(0, app.config.get('FAKE_DATA_POINTS', 10)):
         name = random.choice(('Marc', 'Dylan', 'Leo', 'Enes', 'Anna', 'Lea', 'Kurt', 'Chad', 'Lisa', 'Petra')) + ' '
-        name += random.choice(('Gähwiler', 'Marriott', 'Helminger', 'Foobar', 'van Räudig', 'Kurz', 'Lang', 'On', 'Da'))
+        name += random.choice(('Gähwiler', 'Marriott', 'Helminger', '', 'Foobar', 'van Räudig', 'Kurz', 'Lang', 'On', 'Da'))
         source = random.choice(('ios', 'sms'))
         if source == 'sms':
             number = '+41798287644'

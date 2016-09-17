@@ -2,12 +2,11 @@
 
 {% block title %}{{ super() }} - Overview{% endblock %}
 
-{%- block content %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/overview.js') }}"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZE1RJQeKSN5jxz8xxtXZpnEfs7kF08IA&callback=initMap"></script>
+{% endblock %}
 
-<div class="col-md-12">
-	<div class="content-top-1" width="100%">
-		<h3> Google Maps</h3>
-    		<div id="map" style="height:400px;"></div>
-	</div>
-</div>
+{%- block content %}
+<div id="map" style="height: 100%"></div>
 {%- endblock %}
