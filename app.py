@@ -1,5 +1,4 @@
 import random
-from urllib.request import urlopen
 
 from flask import Flask, render_template
 from flask import request
@@ -60,7 +59,8 @@ def reset():
     lon_max = app.config.get('LOCATION_BOUNDS_LON_MAX', 8.525)
     for i in range(0, app.config.get('FAKE_DATA_POINTS', 10)):
         name = random.choice(('Marc', 'Dylan', 'Leo', 'Enes', 'Anna', 'Lea', 'Kurt', 'Chad', 'Lisa', 'Petra')) + ' '
-        name += random.choice(('Gähwiler', 'Marriott', 'Helminger', '', 'Foobar', 'van Räudig', 'Kurz', 'Lang', 'On', 'Da'))
+        name += random.choice(('Gähwiler', 'Marriott', 'Helminger', '', 'Foobar', 'van Räudig', 'Kurz', 'Lang', 'On',
+                               'Da'))
         source = random.choice(('ios', 'sms'))
         if source == 'sms':
             number = '+41798287644'
@@ -207,7 +207,8 @@ def tropo():
     lon = random.uniform(lon_min, lon_max)
     if status is None or needs is None or skills is None:
         return 'error'
-    report = Report("Anonymous", 'phone', status, lon, lat, [needs] if needs else [], 'open', [skills] if skills else [], '+41798287644')
+    report = Report("Anonymous", 'phone', status, lon, lat, [needs] if needs else [], 'open',
+                    [skills] if skills else [], '+41798287644')
     db.session.add(report)
     db.session.commit()
     return 'done'
