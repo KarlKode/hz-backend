@@ -194,9 +194,10 @@ def twilio_sms():
         notify_report(report)
 
     db.session.commit()
-    response = twiml.Response()
-    message = response.message(response_msg)
-    return str(message)
+    return '''<?xml version="1.0" encoding="UTF-8"?>
+    <Response>
+        <Message>%s</Message>
+    </Response>''' % response_msg
 
 
 @app.route('/tropo/debug', methods=['GET', 'POST'])
