@@ -253,9 +253,7 @@ def reports_list(foo):
 
 @socketio.on('reports accept')
 def reports_accept(report_obj):
-    if validate_report(report_obj):
-        return None
-    report = Report.query.filter_by(id=report_obj.id).first_or_404()
+    report = Report.query.filter_by(id=report_obj.get('id', 0)).first_or_404()
     report.needs_status = 'processing'
     action = Action('reports_accept', report=report)
     db.session.add(action)
