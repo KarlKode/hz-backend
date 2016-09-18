@@ -4,7 +4,16 @@
 
 {% block nav_overview %}active{% endblock %}
 
+
 {% block scripts %}
+    <div id="floating-panel">
+      <button class="btn btn-default" onclick="redrawAllPoints()">All</button>
+      <button class="btn btn-default" onclick="redrawPoints(ok)">Ok</button>
+      <button class="btn btn-default" onclick="redrawPoints(medic)">Injured</button>
+      <button class="btn btn-default" onclick="redrawPoints(medic2)">Heavily Injured</button>
+    </div>
+
+
 <script src="{{ url_for('static', filename='js/overview.js') }}"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZE1RJQeKSN5jxz8xxtXZpnEfs7kF08IA&signed_in=true&libraries=visualization&callback=initMap"></script>
 {% endblock %}
