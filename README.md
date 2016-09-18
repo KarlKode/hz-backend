@@ -12,7 +12,7 @@ Map detail view with basic needs (medic,food,water,shelter)
 
 Live feed view of incoming requests
 
-![image](livefeed.png = 400x)
+![image](livefeed.png)
 
 ## SocketIO Events
 ### Client -> Server
