@@ -3,7 +3,7 @@ import urllib2
 
 
 def debug(message):
-    url = 'http://hz.wx.rs:5001/tropo/debug'
+    url = 'http://hz.wx.rs:8000/tropo/debug'
 
     values = {
         "message": message,
@@ -16,7 +16,7 @@ def debug(message):
 
 
 def submit(status, needs, skills):
-    url = 'http://hz.wx.rs:5001/tropo'
+    url = 'http://hz.wx.rs:8000/tropo'
 
     values = {
         "status": status,
