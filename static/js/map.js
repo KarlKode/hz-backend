@@ -20,35 +20,37 @@ function redrawMapPoints(map, selector) {
                 map: map,
                 position: new google.maps.LatLng(report.location.lat, report.location.lng)
             });
-            
-            if(report.needs.length == 1){
-            	if(report.needs[0] == "water"){
-            		marker.setIcon("static/images/droplet.png");
-            	}else if(report.needs[0] == "medic"){
-            	    marker.setIcon("static/images/medic.png");
-            	}else if(report.needs[0] == "shelter"){
-            	    marker.setIcon("static/images/shelter.png");
-            	}else if(report.needs[0] == "food"){
-            	    marker.setIcon("static/images/food.png");
-            	}
-            }
-            
-            var contentString = '<div id="id"> ID: ' + report.id +'</div><br><div id="phone"> PhoneNr.: '+ report.number +'</div><br><div id="content"> Needs : ' + report.needs.toString() +'</div>';
 
-  			var infowindow = new google.maps.InfoWindow({
-    		content: contentString
-  			});
-            
-            google.maps.event.addListener(marker,'click', (function(marker,contentString,infowindow){ 
-    			return function() {
-        		infowindow.setContent(contentString);
-        		infowindow.open(map,marker);
-    		};
-			})(marker,contentString,infowindow));
-            
+            if (report.needs.length == 1) {
+                if (report.needs[0] == "water") {
+                    marker.setIcon("static/images/droplet.png");
+                } else if (report.needs[0] == "medic") {
+                    marker.setIcon("static/images/medic.png");
+                }
+            } else {
+                if (report.needs.indexOf("shelter") >= 0) {
+                    marker.setIcon("static/images/shelter.png");
+                } else if (report.needs.indexOf("food") >= 0) {
+                    marker.setIcon("static/images/food.png");
+                }
+            }
+
+            var contentString = '<div id="id"> ID: ' + report.id + '</div><br><div id="name"> ' + report.name + '</div><br><div id="phone"> PhoneNr.: ' + report.number + '</div><br><div id="content"> Needs : ' + report.needs.toString() + '</div>';
+
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+
+            google.maps.event.addListener(marker, 'click', (function (marker, contentString, infowindow) {
+                return function () {
+                    infowindow.setContent(contentString);
+                    infowindow.open(map, marker);
+                };
+            })(marker, contentString, infowindow));
+
             console.log(marker);
-            if(report.needs.length == 1){
-            	points.push(marker);
+            if (report.needs.length == 1) {
+                points.push(marker);
             }
         }
 
@@ -69,118 +71,138 @@ function initMap() {
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         styles: [
             {
-                "featureType": "landscape",
+                "elementType": "geometry",
                 "stylers": [
                     {
-                        "saturation": -100
+                        "hue": "#ff4400"
                     },
                     {
-                        "lightness": 65
+                        "saturation": -68
                     },
                     {
-                        "visibility": "on"
+                        "lightness": -4
+                    },
+                    {
+                        "gamma": 0.72
                     }
                 ]
             },
             {
-                "featureType": "poi",
+                "featureType": "road",
+                "elementType": "labels.icon"
+            },
+            {
+                "featureType": "landscape.man_made",
+                "elementType": "geometry",
                 "stylers": [
                     {
-                        "saturation": -100
+                        "hue": "#0077ff"
                     },
                     {
-                        "lightness": 51
-                    },
-                    {
-                        "visibility": "simplified"
+                        "gamma": 3.1
                     }
                 ]
             },
             {
-                "featureType": "road.highway",
+                "featureType": "water",
                 "stylers": [
                     {
-                        "saturation": -100
+                        "hue": "#00ccff"
                     },
                     {
-                        "visibility": "simplified"
+                        "gamma": 0.44
+                    },
+                    {
+                        "saturation": -33
                     }
                 ]
             },
             {
-                "featureType": "road.arterial",
+                "featureType": "poi.park",
                 "stylers": [
                     {
-                        "saturation": -100
+                        "hue": "#44ff00"
                     },
                     {
-                        "lightness": 30
-                    },
-                    {
-                        "visibility": "on"
+                        "saturation": -23
                     }
                 ]
             },
             {
-                "featureType": "road.local",
+                "featureType": "water",
+                "elementType": "labels.text.fill",
                 "stylers": [
                     {
-                        "saturation": -100
+                        "hue": "#007fff"
                     },
                     {
-                        "lightness": 40
+                        "gamma": 0.77
                     },
                     {
-                        "visibility": "on"
+                        "saturation": 65
+                    },
+                    {
+                        "lightness": 99
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "labels.text.stroke",
+                "stylers": [
+                    {
+                        "gamma": 0.11
+                    },
+                    {
+                        "weight": 5.6
+                    },
+                    {
+                        "saturation": 99
+                    },
+                    {
+                        "hue": "#0091ff"
+                    },
+                    {
+                        "lightness": -86
+                    }
+                ]
+            },
+            {
+                "featureType": "transit.line",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "lightness": -48
+                    },
+                    {
+                        "hue": "#ff5e00"
+                    },
+                    {
+                        "gamma": 1.2
+                    },
+                    {
+                        "saturation": -23
                     }
                 ]
             },
             {
                 "featureType": "transit",
+                "elementType": "labels.text.stroke",
                 "stylers": [
                     {
-                        "saturation": -100
+                        "saturation": -64
                     },
                     {
-                        "visibility": "simplified"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative.province",
-                "stylers": [
-                    {
-                        "visibility": "off"
-                    }
-                ]
-            },
-            {
-                "featureType": "water",
-                "elementType": "labels",
-                "stylers": [
-                    {
-                        "visibility": "on"
+                        "hue": "#ff9100"
                     },
                     {
-                        "lightness": -25
+                        "lightness": 16
                     },
                     {
-                        "saturation": -100
-                    }
-                ]
-            },
-            {
-                "featureType": "water",
-                "elementType": "geometry",
-                "stylers": [
-                    {
-                        "hue": "#ffff00"
+                        "gamma": 0.47
                     },
                     {
-                        "lightness": -25
-                    },
-                    {
-                        "saturation": -97
+                        "weight": 2.7
                     }
                 ]
             }

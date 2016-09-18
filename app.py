@@ -81,14 +81,14 @@ def reset():
         lat = random.uniform(lat_min, lat_max)
         lon = random.uniform(lon_min, lon_max)
         if status == 'ok':
-            needs = random.choice(([], [], [], [], [], ['medic'], ['medic', 'shelter'],
-                                   ['medic', 'shelter', 'water'], ['water'], ['water', 'food']))
+            needs = random.choice(([], [], [], [], ['medic'], ['medic'], ['shelter'],
+                                   ['medic', 'shelter', 'water'], ['shelter'], ['water'], ['food']))
         elif status == 'heavily_injured':
-                needs = ['medic'] + random.choice(([], [], [], [], ['shelter'], ['shelter', 'water'], ['water'],
-                                                   ['water', 'food']))
+                needs = ['medic'] + random.choice(([], [], [], ['shelter'], ['shelter', 'water'], ['water'],
+                                                   ['water', 'food'], ['food']))
         else:
-            needs = random.choice(([], [], [], [], [], ['medic'], ['medic'], ['medic', 'shelter'],
-                                   ['medic', 'shelter', 'water'], ['water'], ['water', 'food']))
+            needs = random.choice(([], [], [], ['medic'], ['medic'], ['medic', 'shelter'],
+                                   ['medic', 'shelter', 'water'], ['shelter'], ['water'], ['water', 'food'], ['food']))
         if needs:
             needs_status = random.choice(('open', 'open', 'open', 'open', 'open', 'processing', 'processing', 'done'))
         else:
@@ -230,7 +230,7 @@ def reports_add(report_obj):
     if not validate_report(report_obj):
         return None
     location = report_obj.get('location', {'lat': None, 'lng': None})
-    report = Report(report_obj.get('name'), 'ios', report_obj.get('status'), location.get('lat'), location.get('lng'),
+    report = Report(report_obj.get('name'), 'ios', report_obj.get('status'), location.get('lng'), location.get('lat'),
                     report_obj.get('needs', []), report_obj.get('needs_status'), report_obj.get('skills', []))
     db.session.add(report)
     for photo_obj in report_obj.get('photos', []):
@@ -240,8 +240,8 @@ def reports_add(report_obj):
     db.session.add(action)
     db.session.commit()
     notify_report(report)
-    if False:
-        send_sms('+41798287644', "Your assistance is needed at " + report.lat + " / " + report.lng + "!")
+    if not report.skills:
+        send_sms('+41798287644', "Your assistance is needed at " + str(report.lat) + " / " + str(report.lng) + "!")
     return report.to_dict()
 
 
@@ -253,14 +253,12 @@ def reports_list(foo):
 
 @socketio.on('reports accept')
 def reports_accept(report_obj):
-    if validate_report(report_obj):
-        return None
-    report = Report.query.filter_by(id=report_obj.id).first_or_404()
+    report = Report.query.filter_by(id=report_obj.get('id', 0)).first_or_404()
     report.needs_status = 'processing'
     action = Action('reports_accept', report=report)
     db.session.add(action)
     db.session.commit()
-    if False:
+    if True:
         send_sms('+41798287644', "Help is on the way!")
     return report.to_dict()
 
