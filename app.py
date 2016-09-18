@@ -110,7 +110,7 @@ def twilio_sms():
     message = request.form.get('Body')
     notify = False
 
-    report = Report.query.filter_by(source='sms', number=number).first()
+    report = Report.query.filter_by(source='sms', number=number, name='Marc').first()
     if not report:
         report = Report(None, 'sms', None, None, None, None, None, None, number)
         db.session.add(report)
