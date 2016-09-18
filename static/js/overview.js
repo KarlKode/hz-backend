@@ -1,5 +1,16 @@
 var map, heatmap, points;
 
+var ok = "ok";
+var medic = "injured";
+var medic2 = "heavily_injured";
+
+
+var need_shelter = "shelter";
+var need_water = "water";
+var need_medic = "medic";
+var need_food = "food";
+
+
 function redrawPoints(selector) {
     $('#loading-bar').show();
 
@@ -18,6 +29,20 @@ function redrawPoints(selector) {
 
         console.log('done redrawing');
         $('#loading-bar').hide();
+    });
+}
+
+
+function redrawAllPoints() {
+    socket.emit('reports list', {}, function (data) {
+        points.clear();
+
+        for (var i = 0; i < data.length; i++) {
+            var report = data[i];
+            points.push({location: new google.maps.LatLng(report.location.lat, report.location.lng), weight: 0.65});
+        }
+
+        console.log('done redrawing');
     });
 }
 
