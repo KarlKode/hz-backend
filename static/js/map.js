@@ -196,6 +196,13 @@ socket.on('connect', function () {
     console.log("Established socket.io connection");
 });
 
-socket.on('reports new', function (data) {
-    console.log('Reports NEW', data);
+socket.on('reports new', function (report) {
+    console.log('New report', report);
+
+    var marker = new google.maps.Marker({
+        map: map,
+        position: new google.maps.LatLng(report.location.lat, report.location.lng)
+    });
+    console.log(marker);
+    points.push(marker);
 });

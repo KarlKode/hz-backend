@@ -17,6 +17,10 @@ LOCATION_BOUNDS_LAT_MAX = 47.393
 LOCATION_BOUNDS_LON_MIN = 8.505
 LOCATION_BOUNDS_LON_MAX = 8.525
 
+TWILIO_SID = None
+TWILIO_TOKEN = None
+TWILIO_SMS_NUMBER = None
+
 try:
     from local_settings import *
 except ImportError:
