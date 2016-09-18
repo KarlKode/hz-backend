@@ -240,7 +240,7 @@ def reports_add(report_obj):
     db.session.add(action)
     db.session.commit()
     notify_report(report)
-    if True:
+    if not report.skills:
         send_sms('+41798287644', "Your assistance is needed at " + str(report.lat) + " / " + str(report.lng) + "!")
     return report.to_dict()
 
