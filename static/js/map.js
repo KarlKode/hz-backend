@@ -33,7 +33,7 @@ function redrawMapPoints(map, selector) {
             	}
             }
             
-            var contentString = '<div id="content">' +report.needs.toString() +'</div>';
+            var contentString = '<div id="id"> ID: ' + report.id +'</div><br><div id="phone"> PhoneNr.: '+ report.number +'</div><br><div id="content"> Needs : ' + report.needs.toString() +'</div>';
 
   			var infowindow = new google.maps.InfoWindow({
     		content: contentString
