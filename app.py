@@ -4,6 +4,7 @@ from flask import Flask, render_template
 from flask import request
 from flask_socketio import SocketIO, emit
 from twilio import twiml
+from twilio.rest import TwilioRestClient
 
 import settings
 from models import db, Report, Photo, Action
@@ -13,6 +14,16 @@ app = Flask(__name__)
 app.config.from_object(settings)
 socketio = SocketIO(app)
 db.init_app(app)
+
+twilio = TwilioRestClient(app.config.get('TWILIO_SID'), app.config.get('TWILIO_TOKEN'))
+
+
+def send_sms(number, message):
+    return twilio.messages.create(
+        to=number,
+        from_=app.config.get('TWILIO_SMS_NUMBER'),
+        body=message
+    )
 
 
 @app.route('/')
@@ -229,6 +240,8 @@ def reports_add(report_obj):
     db.session.add(action)
     db.session.commit()
     notify_report(report)
+    if False:
+        send_sms('+41798287644', "Your assistance is needed at " + report.lat + " / " + report.lng + "!")
     return report.to_dict()
 
 
@@ -247,6 +260,8 @@ def reports_accept(report_obj):
     action = Action('reports_accept', report=report)
     db.session.add(action)
     db.session.commit()
+    if False:
+        send_sms('+41798287644', "Help is on the way!")
     return report.to_dict()
 
 
