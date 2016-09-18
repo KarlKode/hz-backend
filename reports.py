@@ -1,7 +1,4 @@
-import twilio
-from flask.ext.socketio import emit
-
-from models import Report
+from flask_socketio import emit
 
 
 def validate_report(report_obj):
