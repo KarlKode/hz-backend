@@ -112,7 +112,7 @@ def twilio_sms():
 
     report = Report.query.filter_by(source='sms', number=number, name='Marc').first()
     if not report:
-        report = Report(None, 'sms', None, None, None, None, None, None, number)
+        report = Report('Marc', 'sms', None, None, None, None, None, None, number)
         db.session.add(report)
         response_msg = "Enter your full name."
     elif message.lower() == "delete":
