@@ -58,118 +58,138 @@ function initMap() {
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         styles: [
             {
-                "featureType": "landscape",
+                "elementType": "geometry",
                 "stylers": [
                     {
-                        "saturation": -100
+                        "hue": "#ff4400"
                     },
                     {
-                        "lightness": 65
+                        "saturation": -68
                     },
                     {
-                        "visibility": "on"
+                        "lightness": -4
+                    },
+                    {
+                        "gamma": 0.72
                     }
                 ]
             },
             {
-                "featureType": "poi",
+                "featureType": "road",
+                "elementType": "labels.icon"
+            },
+            {
+                "featureType": "landscape.man_made",
+                "elementType": "geometry",
                 "stylers": [
                     {
-                        "saturation": -100
+                        "hue": "#0077ff"
                     },
                     {
-                        "lightness": 51
-                    },
-                    {
-                        "visibility": "simplified"
+                        "gamma": 3.1
                     }
                 ]
             },
             {
-                "featureType": "road.highway",
+                "featureType": "water",
                 "stylers": [
                     {
-                        "saturation": -100
+                        "hue": "#00ccff"
                     },
                     {
-                        "visibility": "simplified"
+                        "gamma": 0.44
+                    },
+                    {
+                        "saturation": -33
                     }
                 ]
             },
             {
-                "featureType": "road.arterial",
+                "featureType": "poi.park",
                 "stylers": [
                     {
-                        "saturation": -100
+                        "hue": "#44ff00"
                     },
                     {
-                        "lightness": 30
-                    },
-                    {
-                        "visibility": "on"
+                        "saturation": -23
                     }
                 ]
             },
             {
-                "featureType": "road.local",
+                "featureType": "water",
+                "elementType": "labels.text.fill",
                 "stylers": [
                     {
-                        "saturation": -100
+                        "hue": "#007fff"
                     },
                     {
-                        "lightness": 40
+                        "gamma": 0.77
                     },
                     {
-                        "visibility": "on"
+                        "saturation": 65
+                    },
+                    {
+                        "lightness": 99
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "labels.text.stroke",
+                "stylers": [
+                    {
+                        "gamma": 0.11
+                    },
+                    {
+                        "weight": 5.6
+                    },
+                    {
+                        "saturation": 99
+                    },
+                    {
+                        "hue": "#0091ff"
+                    },
+                    {
+                        "lightness": -86
+                    }
+                ]
+            },
+            {
+                "featureType": "transit.line",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "lightness": -48
+                    },
+                    {
+                        "hue": "#ff5e00"
+                    },
+                    {
+                        "gamma": 1.2
+                    },
+                    {
+                        "saturation": -23
                     }
                 ]
             },
             {
                 "featureType": "transit",
+                "elementType": "labels.text.stroke",
                 "stylers": [
                     {
-                        "saturation": -100
+                        "saturation": -64
                     },
                     {
-                        "visibility": "simplified"
-                    }
-                ]
-            },
-            {
-                "featureType": "administrative.province",
-                "stylers": [
-                    {
-                        "visibility": "off"
-                    }
-                ]
-            },
-            {
-                "featureType": "water",
-                "elementType": "labels",
-                "stylers": [
-                    {
-                        "visibility": "on"
+                        "hue": "#ff9100"
                     },
                     {
-                        "lightness": -25
+                        "lightness": 16
                     },
                     {
-                        "saturation": -100
-                    }
-                ]
-            },
-            {
-                "featureType": "water",
-                "elementType": "geometry",
-                "stylers": [
-                    {
-                        "hue": "#ffff00"
+                        "gamma": 0.47
                     },
                     {
-                        "lightness": -25
-                    },
-                    {
-                        "saturation": -97
+                        "weight": 2.7
                     }
                 ]
             }

@@ -240,7 +240,7 @@ def reports_add(report_obj):
     db.session.add(action)
     db.session.commit()
     notify_report(report)
-    if False:
+    if True:
         send_sms('+41798287644', "Your assistance is needed at " + report.lat + " / " + report.lng + "!")
     return report.to_dict()
 
@@ -260,7 +260,7 @@ def reports_accept(report_obj):
     action = Action('reports_accept', report=report)
     db.session.add(action)
     db.session.commit()
-    if False:
+    if True:
         send_sms('+41798287644', "Help is on the way!")
     return report.to_dict()
 
