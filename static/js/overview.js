@@ -167,6 +167,8 @@ socket.on('connect', function () {
     console.log("Established socket.io connection");
 });
 
-socket.on('reports new', function (data) {
-    console.log('Reports NEW', data);
+socket.on('reports new', function (report) {
+    console.log('New report', report);
+
+    points.push({location: new google.maps.LatLng(report.location.lat, report.location.lng), weight: 1});
 });
