@@ -17,3 +17,12 @@ html, body { height: 100%; }
   line-height: 30px;
   padding-left: 10px;
 }
+
+
+#loading-bar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -35px;
+    margin-left: -35px;
+}

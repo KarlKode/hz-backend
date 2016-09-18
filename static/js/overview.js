@@ -12,6 +12,8 @@ var need_food = "food";
 
 
 function redrawPoints(selector) {
+    $('#loading-bar').show();
+
     socket.emit('reports list', {}, function (data) {
         points.clear();
 
@@ -26,6 +28,7 @@ function redrawPoints(selector) {
         }
 
         console.log('done redrawing');
+        $('#loading-bar').hide();
     });
 }
 
@@ -55,22 +58,119 @@ function initMap() {
         mapTypeId: google.maps.MapTypeId.ROADMAP,
         styles: [
             {
-                featureType: 'all',
-                stylers: [
-                    {saturation: -80}
+                "featureType": "landscape",
+                "stylers": [
+                    {
+                        "saturation": -100
+                    },
+                    {
+                        "lightness": 65
+                    },
+                    {
+                        "visibility": "on"
+                    }
                 ]
-            }, {
-                featureType: 'road.arterial',
-                elementType: 'geometry',
-                stylers: [
-                    {hue: '#00ffee'},
-                    {saturation: 50}
+            },
+            {
+                "featureType": "poi",
+                "stylers": [
+                    {
+                        "saturation": -100
+                    },
+                    {
+                        "lightness": 51
+                    },
+                    {
+                        "visibility": "simplified"
+                    }
                 ]
-            }, {
-                featureType: 'poi.business',
-                elementType: 'labels',
-                stylers: [
-                    {visibility: 'off'}
+            },
+            {
+                "featureType": "road.highway",
+                "stylers": [
+                    {
+                        "saturation": -100
+                    },
+                    {
+                        "visibility": "simplified"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.arterial",
+                "stylers": [
+                    {
+                        "saturation": -100
+                    },
+                    {
+                        "lightness": 30
+                    },
+                    {
+                        "visibility": "on"
+                    }
+                ]
+            },
+            {
+                "featureType": "road.local",
+                "stylers": [
+                    {
+                        "saturation": -100
+                    },
+                    {
+                        "lightness": 40
+                    },
+                    {
+                        "visibility": "on"
+                    }
+                ]
+            },
+            {
+                "featureType": "transit",
+                "stylers": [
+                    {
+                        "saturation": -100
+                    },
+                    {
+                        "visibility": "simplified"
+                    }
+                ]
+            },
+            {
+                "featureType": "administrative.province",
+                "stylers": [
+                    {
+                        "visibility": "off"
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "labels",
+                "stylers": [
+                    {
+                        "visibility": "on"
+                    },
+                    {
+                        "lightness": -25
+                    },
+                    {
+                        "saturation": -100
+                    }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "geometry",
+                "stylers": [
+                    {
+                        "hue": "#ffff00"
+                    },
+                    {
+                        "lightness": -25
+                    },
+                    {
+                        "saturation": -97
+                    }
                 ]
             }
         ]
