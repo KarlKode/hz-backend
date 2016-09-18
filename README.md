@@ -4,15 +4,15 @@
 ##Screenshots
 Heatmap View for getting an overview of critical areas
 
-![image](heatmap.png =400x)
+![image](heatmap.png)
 
 Map detail view with basic needs (medic,food,water,shelter)
 
-![image](needs.png =400x)
+![image](needs.png)
 
 Live feed view of incoming requests
 
-![image](livefeed.png =400x)
+![image](livefeed.png = 400x)
 
 ## SocketIO Events
 ### Client -> Server
